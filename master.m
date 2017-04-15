@@ -7,10 +7,12 @@ fileName = 'street.txt';
 %% Blur Here ???
 
 %% Break into patches
-patchSize = 16; 
+patchSize = 12; 
 [imPatches] = makePatches(imStack,patchSize);
 
 %% Sparse Coding
+
+
 
 %% Profit
 
