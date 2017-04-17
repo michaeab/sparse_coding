@@ -22,8 +22,6 @@ function aDot = equationFive(I,phi,a,lambda,sigma)
 
 aDot = biFunc(phi,I) - sumCaFunc(phi,a) - (lambda./sigma).*Sderivative(a'./sigma);
 
-aDot = aDot./100000;
-
 % residual = I-(phi*a');
 % 
 % aDot = scaleDown.*(phi'*residual) - (lambda./sigma).*Sderivative(a'./sigma);

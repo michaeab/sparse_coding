@@ -15,7 +15,7 @@ alpha = 0.01;
 % RUNNING SUM OF A
 runSum = zeros([1 size(phiInit,2)]);
 
-for ind = 1:2000 % size(allImages,3)
+for ind = 1:2 % size(allImages,3)
    if ind<600
       eta = 5; 
    elseif ind<1200
@@ -40,7 +40,7 @@ for ind = 1:2000 % size(allImages,3)
    % STORE THE CURRENT PHI AS 'OLD' PHI
    phiOld = phi;
    % ADD CHANGE IN PHI TO GET NEW PHI
-   phiNew = phi+deltaPhi./100000;
+   phiNew = phi+deltaPhi;
    % ADAPT L2 NORM OF NEW PHI
    phiAdapt = adaptL2(phiNew,phiOld,sigma_I,alpha,runSum./ind);
    % NEXT PHI BECOMES CURRENT ADAPTED PHI
