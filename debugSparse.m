@@ -18,21 +18,34 @@ for ind = randsample(1:65000,10) % RANDOMLY SAMPLE IMAGE PATCH
     % LAMBDA
     lambda = sigma_I.*lambdaSigmaIratio;
     % GET NEW WEIGHTS AND TOTAL ASSOCIATED ERROR
-    [aNew,totalError] = minimizeA(I(:),phiInit,a',lambda,sigma_I,20);
+    [aNew,totalError] = minimizeA(I(:),phiInit,a',lambda,sigma_I,200);
+    % RECONSTRUCT IMAGE BASED ON OLD WEIGHTS
+    reconstructedIold = phiInit*a;
+    % RECONSTRUCT IMAGE BASED ON NEW WEIGHTS
     reconstructedI = phiInit*aNew;
+    
     figure; 
-    set(gcf,'Position',[515 662 1285 420]);
+    set(gcf,'Position',[776 513 1015 820]);
 %    subplot(1,3,1);
-    subplot(1,3,1);
+    subplot(2,2,1);
     plot(totalError,'LineWidth',1.5); axis square;
     formatFigure('Iteration','Cost',['Image number ' num2str(ind)]);
-    set(gca,'LineWidth',1.5);
-    subplot(1,3,2);
+    set(gca,'LineWidth',1.5);   
+    
+    subplot(2,2,2);
     imagesc(I);
     axis square; colormap gray;
-    subplot(1,3,3);
+    formatFigure('','','Original image');
+    
+    subplot(2,2,3);
+    imagesc(reshape(reconstructedIold,[12 12]));
+    axis square; colormap gray;
+    formatFigure('','','Reconstructed image (old weights)');
+    
+    subplot(2,2,4);
     imagesc(reshape(reconstructedI,[12 12]));
     axis square; colormap gray;
+    formatFigure('','','Reconstructed image (new weights)');
     
 %     subplot(1,3,2);
 %     hist(a,30);

@@ -1,6 +1,6 @@
-function phiAdapt = adaptL2(phiNew,phiOld,sigma_goal,alpha,runAvg)
+function [phiAdapt,scaleFactor] = adaptL2(phiNew,sigma_goal,alpha,runAvg)
 
-% function phiAdapt = adaptL2(phiNew,phiOld,sigma_goal,alpha,runAvg)
+% function phiAdapt = adaptL2(phiNew,sigma_goal,alpha,runAvg)
 %
 % when basis functions are updated, need to adapt their L2 norm so the
 % output variance of each weight is held at an appropriate level. 
@@ -16,6 +16,6 @@ function phiAdapt = adaptL2(phiNew,phiOld,sigma_goal,alpha,runAvg)
 % SCALE FACTOR
 scaleFactor = (runAvg./(sigma_goal.^2)).^alpha;
 
-phiAdapt = bsxfun(@times,phiOld,scaleFactor);
+phiAdapt = bsxfun(@times,phiNew,scaleFactor);
 
 end
