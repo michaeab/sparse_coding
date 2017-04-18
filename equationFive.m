@@ -20,10 +20,12 @@ function aDot = equationFive(I,phi,a,lambda,sigma)
 %                 variance of the image pixels
 %         sigma : scaling factor: std dev of images
 
-aDot = biFunc(phi,I) - sumCaFunc(phi,a) - (lambda./sigma).*Sderivative(a'./sigma);
+% aDot = biFunc(phi,I) - sumCaFunc(phi,a) - (lambda./sigma).*Sderivative(a'./sigma);
 
-% residual = I-(phi*a');
-% 
-% aDot = scaleDown.*(phi'*residual) - (lambda./sigma).*Sderivative(a'./sigma);
+scaleDown = 1;
+
+residual = I-(phi*a');
+
+aDot = scaleDown.*((phi'*residual) - lambda.*Sderivative(a'));
 
 end

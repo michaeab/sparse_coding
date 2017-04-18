@@ -15,7 +15,9 @@ alpha = 0.01;
 % RUNNING SUM OF A
 runSum = zeros([1 size(phiInit,2)]);
 
-for ind = 1:2 % size(allImages,3)
+phiAdaptL2 = [];
+
+for ind = 20:120 % size(allImages,3)
    if ind<600
       eta = 5; 
    elseif ind<1200
@@ -32,17 +34,18 @@ for ind = 1:2 % size(allImages,3)
    % WEIGHTING OF SPARSENESS RELATIVE TO RECONSTRUCTION ACCURACY
    lambda = sigma_I.*lambdaSigmaIratio;
    % NEW WEIGHTS
-   aNew = minimizeA(curImage(:),phi,a',lambda,sigma_I,numIter);
+   a = minimizeA(curImage(:),phi,a',lambda,sigma_I,numIter);
    % ADD NEW WEIGHTS TO RUNNING SUM
-   runSum = runSum+aNew';
+   runSum = runSum+a';
    % GET THE NECESSARY CHANGE IN BASIS FUNCTIONS
-   deltaPhi = updatePhi(curImage(:),phi,aNew',eta);
+   deltaPhi = updatePhi(curImage(:),phi,a',eta);
    % STORE THE CURRENT PHI AS 'OLD' PHI
    phiOld = phi;
    % ADD CHANGE IN PHI TO GET NEW PHI
    phiNew = phi+deltaPhi;
    % ADAPT L2 NORM OF NEW PHI
-   phiAdapt = adaptL2(phiNew,phiOld,sigma_I,alpha,runSum./ind);
+   phiAdapt = adaptL2(phiNew,phiOld,sigma_I,alpha,(runSum.^2)./ind);
+   phiAdaptL2(ind,:) = sqrt(sum(phiAdapt.^2));
    % NEXT PHI BECOMES CURRENT ADAPTED PHI
    phi = phiAdapt;
    if mod(ind,100) == 0
