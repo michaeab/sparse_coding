@@ -21,14 +21,14 @@ verticalShiftValues=Shuffle(verticalShiftValues);
 horizontalShiftValues=-5:0.2:4.8;
 horizontalShiftValues=Shuffle(horizontalShiftValues);
 
-for ii = 1:100
+for ii = 1:50
     [ gabor ] = makeGabor(lamdaValues(ii), thetaValues(ii), sigmaValues(ii), phaseValues(ii), trimValues(ii), horizontalShiftValues(ii), verticalShiftValues(ii));
     gabors(ii,:) = gabor;
 end
 
 for ii = 1:10000
-    a=zeros(1,100);
-    a(1:5)=randsample(1:100,5);
+    a=zeros(1,50);
+    a(1:5)=randsample(1:50,5);
     a=Shuffle(a);
     
     image(ii,:)=(a*gabors);
