@@ -22,7 +22,7 @@ horizontalShiftValues=-5:0.2:4.8;
 horizontalShiftValues=Shuffle(horizontalShiftValues);
 
 for ii = 1:100
-    [ gabor ] = makeGabor(lamda, theta, sigma, phase, trim, horizontalShift, verticalShift);
+    [ gabor ] = makeGabor(lamdaValues(ii), thetaValues(ii), sigmaValues(ii), phaseValues(ii), trimValues(ii), horizontalShiftValues(ii), verticalShiftValues(ii));
     gabors(ii,:) = gabor;
 end
 
