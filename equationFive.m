@@ -26,6 +26,6 @@ scaleDown = 1;
 
 residual = I-(phi*a');
 
-aDot = scaleDown.*((phi'*residual) - lambda.*Sderivative(a'));
+aDot = scaleDown.*((phi'*residual) - 14.*lambda.*Sderivative(a'));
 
 end

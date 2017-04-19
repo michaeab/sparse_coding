@@ -4,11 +4,20 @@ load('patches.mat');
 
 %%
 
+numBasis = 144;
+
+%%
+
+% imPatches = ((imPatches+1)./2);
+
+%%
+
 for ind = randsample(1:65000,10) % RANDOMLY SAMPLE IMAGE PATCH
     % GRAB IMAGE PATCH
     I = imPatches(:,:,ind);
     % INITIALIZE BASIS FUNCTIONS
-    phiInit = 0.05.*(-1+2.*rand([144 192]));
+    phiInit = 0.05.*(-1+2.*rand([144 numBasis]));
+%    phiInit = 0.01.*rand([144 numBasis]);
     % INITIALIZE WEIGHTS
     a = phiInit'*I(:);
     % STD DEV OF IMAGE

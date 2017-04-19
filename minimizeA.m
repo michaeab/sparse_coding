@@ -31,9 +31,10 @@ for i = 1:numIter % FOR EACH ITERATION
    aDot = equationFive(I,phi,a,lambda,sigma);
    % UPDATE WEIGHTS
    a = a+aDot'./scaleAdot;
-   display(num2str(max(aDot)./scaleAdot));
    totalError(i) = sum((I - phi*a').^2) + lambda.*sum((log(1+a.^2)./log(2)));
 end
+
+% display(num2str(max(aDot)./scaleAdot));
 
 aNew = a';
 

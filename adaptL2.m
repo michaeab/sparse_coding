@@ -14,7 +14,7 @@ function [phiAdapt,scaleFactor] = adaptL2(phiNew,sigma_goal,alpha,runAvg)
 
 
 % SCALE FACTOR
-scaleFactor = (runAvg./(sigma_goal.^2)).^alpha;
+scaleFactor = 1.*(runAvg./(sigma_goal.^2)).^alpha;
 
 phiAdapt = bsxfun(@times,phiNew,scaleFactor);
 
