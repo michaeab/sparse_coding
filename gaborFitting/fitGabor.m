@@ -1,6 +1,6 @@
 function [ lamda, theta, sigma, phase, trim, horizontalShift, verticalShift ] = fitGabor(patch)
 
-options = optimoptions('fmincon','Diagnostics','on','Display','iter','Algorithm','interior-point','MaxIter',40);
+options = optimoptions('fmincon','Diagnostics','off','Algorithm','interior-point','MaxIter',100);
 
 % estimate initial values
 [ fittedTheta0, fittedLamda0, horizontalShift0, verticalShift0 ] = determineGaborInitialValues(patch);
@@ -11,7 +11,7 @@ trim0 = 0.005;
 
 prmVec0 = [ fittedLamda0 fittedTheta0 sigma0 phase0 trim0 horizontalShift0 verticalShift0]; 
 
-f = @(prmVec)errorFuncGabor(patch, prmVec)
+f = @(prmVec)errorFuncGabor(patch, prmVec);
 
 % bounds
 vlb = [0 0 0 0 0.001 -7 -7];

@@ -11,7 +11,7 @@ function [ gabor ] = makeGabor(lamda, theta, sigma, phase, trim, horizontalShift
 %trim = .005;                             % trim off gaussian values smaller than this
 
 
-imSize = 12;
+imSize = 16;
 % go on to define the gabor based on these initial parameters
 X = 1:imSize;                           % X is a vector from 1 to imageSize
 X0 = (X / imSize) - .5;      % rescale X -> -.5 to .5
@@ -24,7 +24,7 @@ sinX = sin( Xf + phaseRad) ;            % make phase-shifted sinewave
 
 % pad in either direction
 dx = X0(2)-X0(1);
-X0 = horzcat(-100:dx:(min(X0)-dx),X0,(max(X0)+dx):dx:100);
+X0 = horzcat(-20:dx:(min(X0)-dx),X0,(max(X0)+dx):dx:20);
 
 
 [Xm Ym] = meshgrid(X0, X0); 
@@ -49,7 +49,8 @@ gabor = grating .* gauss;                % use .* dot-product
 % offset the gabor to have it not centered at 0
 %gabor = horzcat(gabor, zeros(100,100));
 %gabor = vertcat(gabor, zeros(100,200));
-gabor = gabor(1196+verticalShift:1207+verticalShift,1196-horizontalShift:1207-horizontalShift);
+
+gabor = gabor((round(length(gabor)/2)-imSize/2)+verticalShift:(round(length(gabor)/2)+imSize/2-1)+verticalShift,(round(length(gabor)/2)-imSize/2)-horizontalShift:(round(length(gabor)/2)+imSize/2-1)-horizontalShift);
 %figure;
 %imagesc(gabor);
 gabor = gabor(:);

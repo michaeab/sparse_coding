@@ -53,7 +53,8 @@ function [ fittedTheta, fittedLamda, horizontalShift, verticalShift ] = determin
 
 
 %% now to actually determine the orientation of the gabor
-patchMatrix = vec2mat(patch,12)';
+imSize = 16;
+patchMatrix = vec2mat(patch,imSize)';
 
 transformed = (abs(fftshift(fft2(patchMatrix))));
 
@@ -72,8 +73,8 @@ fittedTheta = 90-atand(yLength/xLength); % the orientation of the grating relati
 relevantIndex=sortIndices(length(patchMatrix(:)));
 [I_row, I_col] = ind2sub(size(patchMatrix),relevantIndex);
 %fittedGaborCenter = [I_row, I_col];
-verticalShift = 7-I_row;
-horizontalShift = I_col-6;
+verticalShift = (imSize/2+1)-I_row;
+horizontalShift = I_col-imSize/2-2;
 
 %% determine f
 transformed = (abs(fftshift(fft2(patchMatrix))));
