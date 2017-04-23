@@ -7,6 +7,12 @@ function output = Sderivative(x)
 % inputs:
 %         x: any variable (in our case, a_i/sigma)
 
-output = (2.*x)./((1+x.^2).*(log(2)));
+x = x.*4;
+
+output = (2.*x)./((1+x.^2).*(log(2.72)));
+% output = zeros(size(x));
+% output(x==0) = nan;
+% output(x>0) = 1;
+% output(x<0) = -1;
 
 end

@@ -1,4 +1,4 @@
-function phiFinal = sparseCoding(phiInit,allImages)
+function phiFinal = sparseCodingAvg(phiInit,allImages)
 
 % INITIALIZE BASIS FUNCTIONS
 phi = phiInit;
@@ -8,24 +8,15 @@ lambdaSigmaIratio = 0.14;
 
 % FACTOR BY WHICH TO SCALE LEARNING RATE
 etaScale = 1;
-% NUMBER OF ITERATIONS
-numIter = 200000;
-% HOW OFTEN TO PLOT RECONSTRUCTED IMAGE
-plotEvery = 20000;
-% HOW OFTEN TO TRACK CHANGE IN PHI
-trackEvery = 1000;
-% SIZE OF BASIS FUNCTION IN 2D
-sizeBasis = [12 12];
-% ROWS AND COLUMNS FOR PLOTTING BASES
-numBasis2plot = [12 12];
 % ORDER OF IMAGES 
-indStore = randsample(1:size(allImages,3),numIter,1);
+indStore = randsample(1:size(allImages,3),200000,1);
 
-% INITIALIZE MATRICES FOR STORING CHANGE IN PHI
-trackChanges = [];
-trackChangesPreEta = [];
+% INITIALIZE MATRICES FOR STORING WEIGHTS AND RESIDUALS
+aStore = [];
+rStore = [];
 
-for j = 1:length(indStore);
+for j = 1:length(indStore); % FOR EACH ITERATION
+    
    % SET ETA DEPENDING ON ITERATION
    if j < 600
       eta = 5;
@@ -34,10 +25,11 @@ for j = 1:length(indStore);
    else
       eta = 1; 
    end
+   
    % CURRENT IMAGE
    ind = indStore(j);
    % SCALE ETA APPROPRIATELY
-   eta = etaScale.*eta;
+   eta = etaScale.*1;
    % GET CURRENT IMAGE
    curImage = allImages(:,:,ind);
    % INITIALIZE WEIGHTS IN THIS WAY
@@ -48,28 +40,41 @@ for j = 1:length(indStore);
    lambda = sigma_I.*lambdaSigmaIratio;
    % NEW WEIGHTS
    a = minimize1(phi,curImage(:),lambda);
+   % STORE NEW WEIGHTS
+   aStore(:,end+1) = a;
+   % RECONSTRUCT IMAGE USING OLD PHI AND NEW WEIGHT
+   reconImg2store = phi*a;
+   % SUBTRACT RECONSTRUCTED IMAGE FROM CURRENT IMAGE
+   residual = curImage(:)-reconImg2store;
+   % STORE RESULTING RESIDUAL
+   rStore(:,end+1) = residual;
    
-   % KEEP OLD PHI FOR L2 FIXING
-   phiOld = phi;
-   % GET THE NECESSARY CHANGE IN BASIS FUNCTIONS
-   [deltaPhi,deltaPhiPreEta] = updatePhi(curImage(:),phi,a',eta);
-   % ADD CHANGE IN PHI TO GET NEW PHI
-   phiNew = phi+deltaPhi;
-   if mod(j,trackEvery) == 0
-       % TRACK MAGNITUDE OF PHI UPDATES
-       trackChanges(end+1) = mean(abs(deltaPhi(:)));
-       trackChangesPreEta(end+1) = mean(abs(deltaPhiPreEta(:)));
+   if mod(j,100) == 0 % EVERY 100 ITERATIONS
+       % GET THE MEAN WEIGHT ACROSS THE PREVIOUS 100 ITERATIONS
+       a2update = mean(aStore,2);
+       % EMPTY THE MATRIX
+       aStore = [];
+       % GET THE MEAN RESIDUAL ACROSS THE PREVIOUS 100 ITERATIONS
+       r2update = mean(rStore,2);
+       % EMPTY THE MATRIX
+       rStore = [];
+       % KEEP OLD PHI FOR L2 FIXING
+       phiOld = phi;
+       % GET THE NECESSARY CHANGE IN BASIS FUNCTIONS
+       deltaPhi = updatePhiAvg(r2update,a2update,eta);
+       % ADD CHANGE IN PHI TO GET NEW PHI
+       phiNew = phi+deltaPhi;
+       % ADAPT L2 NORM OF NEW PHI
+       [phiAdapt,~] = fixL2(phiOld,phiNew);
+       % NEXT PHI BECOMES CURRENT ADAPTED PHI
+       phi = phiAdapt;
    end
-   % ADAPT L2 NORM OF NEW PHI
-   [phiAdapt,~] = fixL2(phiOld,phiNew);
-   % NEXT PHI BECOMES CURRENT ADAPTED PHI
-   phi = phiAdapt;
    
    if mod(j,1000) == 0
       display(['Iteration ' num2str(j)]);
    end
    
-   if mod(j,plotEvery) == 0
+   if mod(j,10000) == 0
       figure;
       set(gcf,'Position',[582 715 1136 420]);
       subplot(1,2,1);
@@ -95,24 +100,12 @@ phiFinal = phi;
 figure;
 set(gcf,'Position',[341 305 1695 1035]);
 for i = 1:size(phiFinal,2)
-   subplot(numBasis2plot(1),numBasis2plot(1),i);
-   imagesc(reshape(phiFinal(:,i),sizeBasis));
+   subplot(12,12,i);
+   imagesc(reshape(phiFinal(:,i),[12 12]));
    axis square;
    colormap gray;
    set(gca,'XTick',[]);
    set(gca,'YTick',[]);
 end
-
-figure;
-plot(trackChanges,'LineWidth',1.5);
-axis square;
-formatFigure('Iteration','Update magnitude');
-set(gca,'LineWidth',1.5);
-
-figure;
-plot(trackChangesPreEta,'LineWidth',1.5);
-axis square;
-formatFigure('Iteration','Update magnitude');
-set(gca,'LineWidth',1.5);
 
 end

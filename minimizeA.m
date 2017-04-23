@@ -1,4 +1,4 @@
-function [aNew,totalError]= minimizeA(I,phi,a,lambda,sigma,numIter)
+function [aNew,totalError,SprimeStore,aRealTime,aDotStore,sparseness]= minimizeA(I,phi,a,lambda,sigma,numIter)
 
 % function aNew = minimizeA(I,phi,a,lambda,sigma,numIter)
 %
@@ -28,10 +28,16 @@ scaleAdot = 1;
 
 for i = 1:numIter % FOR EACH ITERATION
    % CHANGE IN DERIVATIVE OF WEIGHTS
-   aDot = equationFive(I,phi,a,lambda,sigma);
+   [aDot, Sprime] = equationFive(I,phi,a,lambda,sigma);
+   aRealTime(:,i) = a;
    % UPDATE WEIGHTS
    a = a+aDot'./scaleAdot;
-   totalError(i) = sum((I - phi*a').^2) + lambda.*sum((log(1+a.^2)./log(2)));
+%   a = aDot';
+   totalError(i) = sum((I - phi*a').^2) + lambda.*sum(log(1+a.^2)./log(2));
+   % STORE S-PRIME
+   SprimeStore(:,i) = Sprime;
+   aDotStore(:,i) = aDot;
+   sparseness(i) = sum(log(1+a.^2)./log(2));
 end
 
 % display(num2str(max(aDot)./scaleAdot));

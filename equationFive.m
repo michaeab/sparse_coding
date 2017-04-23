@@ -1,4 +1,4 @@
-function aDot = equationFive(I,phi,a,lambda,sigma)
+function [aDot, Sprime] = equationFive(I,phi,a,lambda,sigma)
 
 % function aDot = equationFive(I,phi,a,lambda,sigma)
 %
@@ -26,6 +26,8 @@ scaleDown = 1;
 
 residual = I-(phi*a');
 
-aDot = scaleDown.*((phi'*residual) - 14.*lambda.*Sderivative(a'));
+aDot = scaleDown.*((phi'*residual)) - lambda.*Sderivative(a');
+
+Sprime = Sderivative(a');
 
 end

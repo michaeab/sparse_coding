@@ -1,4 +1,4 @@
-function deltaPhi = updatePhi(I,phi,a,eta)
+function [deltaPhi,deltaPhiPreEta] = updatePhi(I,phi,a,eta)
 
 % function deltaPhi = updatePhi(I,phi,a,eta)
 %
@@ -31,6 +31,7 @@ residualMatrix = repmat(residual,[1 size(phi,2)]);
 
 % MULTIPLY EACH RESIDUAL BY THE WEIGHTS AND THE LEARNING RATE
 deltaPhi = bsxfun(@times,residualMatrix,a);
+deltaPhiPreEta = deltaPhi;
 deltaPhi = deltaPhi.*eta;
 
 end
