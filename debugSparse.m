@@ -12,9 +12,6 @@ numBasis = 144;
 
 imPatches = image;
 
-% SCALE IMAGE PATCHES
-imPatches = imPatches.*0.01;
-
 % RESHAPE IMAGE TO APPROPRIATE FORMAT
 imPatches = reshape(imPatches,[size(imPatches,1) 12 12]);
 imPatches = permute(imPatches,[2 3 1]);

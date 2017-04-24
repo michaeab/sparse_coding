@@ -9,9 +9,9 @@ lambdaSigmaIratio = 0.14;
 % FACTOR BY WHICH TO SCALE LEARNING RATE
 etaScale = 1;
 % NUMBER OF ITERATIONS
-numIter = 200000;
+numIter = 10000;
 % HOW OFTEN TO PLOT RECONSTRUCTED IMAGE
-plotEvery = 20000;
+plotEvery = 4000;
 % HOW OFTEN TO TRACK CHANGE IN PHI
 trackEvery = 1000;
 % SIZE OF BASIS FUNCTION IN 2D
@@ -20,6 +20,8 @@ sizeBasis = [12 12];
 numBasis2plot = [12 12];
 % ORDER OF IMAGES 
 indStore = randsample(1:size(allImages,3),numIter,1);
+indStore = repmat(indStore,[10 1]);
+indStore = indStore(:);
 
 % INITIALIZE MATRICES FOR STORING CHANGE IN PHI
 trackChanges = [];
