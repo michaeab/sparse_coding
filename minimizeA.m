@@ -1,4 +1,4 @@
-function [aNew,totalError,SprimeStore,aRealTime,aDotStore,sparseness]= minimizeA(I,phi,a,lambda,sigma,numIter)
+function [aNew,totalError,SprimeStore,aRealTime,aDotStore,sparseness,sse]= minimizeA(I,phi,a,lambda,sigma,numIter)
 
 % function aNew = minimizeA(I,phi,a,lambda,sigma,numIter)
 %
@@ -27,8 +27,10 @@ function [aNew,totalError,SprimeStore,aRealTime,aDotStore,sparseness]= minimizeA
 scaleAdot = 1;
 
 for i = 1:numIter % FOR EACH ITERATION
-   % CHANGE IN DERIVATIVE OF WEIGHTS
-   [aDot, Sprime] = equationFive(I,phi,a,lambda,sigma);
+   % CHANGE IN DERIVATIVE OF WEIGHTS. aDot AND Sprime WILL BE N X 1
+   % VECTORS, WHERE N IS THE NUMBER OF BASIS FUNCTIONS. NOTE THAT a IS
+   % STILL A 1 X N VECTOR.
+   [aDot, Sprime] = equationFive(I,phi,a,lambda);
    aRealTime(:,i) = a;
    % UPDATE WEIGHTS
    a = a+aDot'./scaleAdot;
@@ -38,6 +40,7 @@ for i = 1:numIter % FOR EACH ITERATION
    SprimeStore(:,i) = Sprime;
    aDotStore(:,i) = aDot;
    sparseness(i) = sum(log(1+a.^2)./log(2));
+   sse(i) = sum((I - phi*a').^2);
 end
 
 % display(num2str(max(aDot)./scaleAdot));

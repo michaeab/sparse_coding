@@ -18,8 +18,11 @@ x0 = Shuffle(x0);
 y0 = linspace(-0.5,0.5,numGab);
 y0 = Shuffle(y0);
 freqCpd = linspace(2,4,numGab);
+freqCpd = Shuffle(freqCpd);
 thetaDeg = linspace(0,360,numGab);
+thetaDeg = Shuffle(thetaDeg);
 phaseDeg = 0.*ones([1 numGab]);
+phaseDeg = Shuffle(phaseDeg);
 
 sigmaXdeg =  0.15.*ones([1 numGab]);
 sigmaYdeg =  0.15.*ones([1 numGab]);
@@ -52,5 +55,7 @@ for ii = 1:20000
     a=Shuffle(a);
     
     image(ii,:)=(a*gabors);
-    
+    if mod(ii,1000) == 0
+       display(['Stimulus number ' num2str(ii)]);
+    end
 end

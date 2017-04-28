@@ -1,4 +1,4 @@
-function [aDot, Sprime] = equationFive(I,phi,a,lambda,sigma)
+function [aDot, Sprime] = equationFive(I,phi,a,lambda)
 
 % function aDot = equationFive(I,phi,a,lambda,sigma)
 %
@@ -24,8 +24,13 @@ function [aDot, Sprime] = equationFive(I,phi,a,lambda,sigma)
 
 scaleDown = 1;
 
+% phi: M X N MATRIX OF BASIS FUNCTIONS, WHERE M IS THE LENGTH OF EACH BASIS
+% FUNCTION AND N IS THE NUMBER OF FUNCTIONS. a: is a 1 X N VECTOR OF
+% WEIGHTS FOR THE BASIS FUNCTIONS, HENCE THE TRANSPOSE. residual SHOULD BE
+% M X 1 VECTOR
 residual = I-(phi*a');
 
+% aDot WILL BE AN N X 1 VECTOR OF WEIGHT CHANGES
 aDot = scaleDown.*((phi'*residual)) - lambda.*Sderivative(a');
 
 Sprime = Sderivative(a');
