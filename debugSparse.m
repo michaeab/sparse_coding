@@ -42,7 +42,7 @@ for j = 1:length(ind2plot) % RANDOMLY SAMPLE IMAGE PATCH
     % GRAB IMAGE PATCH
     I = imPatches(:,:,ind);
     % INITIALIZE BASIS FUNCTIONS
-    phiInit = 0.01.*(-1+2.*rand([144 numBasis]));
+    phiInit = 0.023.*(-1+2.*rand([144 numBasis]));
 %    phiInit = 0.5.*bsxfun(@rdivide,phiInit,sqrt(sum(phiInit.^2)));
     % INITIALIZE WEIGHTS
     a = phiInit'*I(:);
@@ -54,7 +54,7 @@ for j = 1:length(ind2plot) % RANDOMLY SAMPLE IMAGE PATCH
     % LAMBDA
     lambda = sigma_I.*lambdaSigmaIratio;
     % NEW WEIGHTS
-    [aNew, totalError,~,~,~, sparseness,sse] = minimizeA(I(:),phiInit,a',lambda,sigma_I,100);
+    [aNew, totalError,~,~,~, sparseness,sse] = minimizeA(I(:),phiInit,a',lambda,100);
     % RECONSTRUCT IMAGE BASED ON OLD WEIGHTS
     reconstructedIold = phiInit*a;
     % RECONSTRUCT IMAGE BASED ON NEW WEIGHTS

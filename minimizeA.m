@@ -1,4 +1,4 @@
-function [aNew,totalError,SprimeStore,aRealTime,aDotStore,sparseness,sse]= minimizeA(I,phi,a,lambda,sigma,numIter)
+function [aNew,totalError,SprimeStore,aRealTime,aDotStore,sparseness,sse]= minimizeA(I,phi,a,lambda,numIter)
 
 % function aNew = minimizeA(I,phi,a,lambda,sigma,numIter)
 %
@@ -24,27 +24,27 @@ function [aNew,totalError,SprimeStore,aRealTime,aDotStore,sparseness,sse]= minim
 %         sigma  : scaling factor: std dev of images
 %         numIter: number of iterations to find minimum a_i
 
-scaleAdot = 1;
-
 for i = 1:numIter % FOR EACH ITERATION
    % CHANGE IN DERIVATIVE OF WEIGHTS. aDot AND Sprime WILL BE N X 1
    % VECTORS, WHERE N IS THE NUMBER OF BASIS FUNCTIONS. NOTE THAT a IS
    % STILL A 1 X N VECTOR.
    [aDot, Sprime] = equationFive(I,phi,a,lambda);
-   aRealTime(:,i) = a;
-   % UPDATE WEIGHTS
-   a = a+aDot'./scaleAdot;
-%   a = aDot';
-   totalError(i) = sum((I - phi*a').^2) + lambda.*sum(log(1+a.^2)./log(2));
-   % STORE S-PRIME
-   SprimeStore(:,i) = Sprime;
+   % STORE S-PRIME AND CHANGE IN WEIGHT
    aDotStore(:,i) = aDot;
+   SprimeStore(:,i) = Sprime;
+   
+   % STORE WEIGHT BEFORE UPDATING
+   aRealTime(:,i) = a;
+   % UPDATE WEIGHTS. SINCE WEIGHTS ARE 1 X N AND aDot is N X 1, TRANSPOSE
+   a = a+aDot';
+   
+   % STORE DIFFERENT TYPES OF ERROR
+   totalError(i) = sum((I - phi*a').^2) + lambda.*sum(log(1+a.^2)./log(2));
    sparseness(i) = sum(log(1+a.^2)./log(2));
    sse(i) = sum((I - phi*a').^2);
 end
 
-% display(num2str(max(aDot)./scaleAdot));
-
+% ASSIGN NEW WEIGHT AND TRANSPOSE TO BE CONSISTENT WITH INITIAL WEIGHTS
 aNew = a';
 
 end
